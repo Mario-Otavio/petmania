@@ -22,6 +22,33 @@ export interface RefreshTokenResponse {
 }
 
 // ============================================
+// INTERFACES DE PETS
+// ============================================
+
+export interface PetImage {
+  id: number;
+  nome: string;
+  contentType: string;
+  url: string;
+}
+
+export interface Pet {
+  id: number;
+  nome: string;
+  raca: string;
+  idade: number;
+  foto?: PetImage;
+}
+
+export interface PaginatedResponse<T> {
+  page: number;
+  size: number;
+  total: number;
+  pageCount: number;
+  content: T[];
+}
+
+// ============================================
 // INTERFACES DE ERRO
 // ============================================
 
