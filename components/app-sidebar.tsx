@@ -32,7 +32,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { logoutApi } from "@/services/auth"
+import { fazerLogoutApi } from "@/services/auth"
 import { useRouter } from "next/navigation"
 
 const data = {
@@ -91,8 +91,8 @@ const data = {
 export function AppSidebar() {
     const router = useRouter()
 
-    const handleLogout = () => {
-        logoutApi()
+    const aoSair = () => {
+        fazerLogoutApi()
         router.push("/login")
     }
 
@@ -185,7 +185,7 @@ export function AppSidebar() {
                                 align="end"
                                 sideOffset={4}
                             >
-                                <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+                                <DropdownMenuItem onClick={aoSair} className="text-red-600 focus:text-red-600">
                                     <LogOut className="mr-2 size-4" />
                                     Sair
                                 </DropdownMenuItem>

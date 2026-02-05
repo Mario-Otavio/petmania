@@ -2,19 +2,19 @@
 // INTERFACES DE AUTENTICAÇÃO
 // ============================================
 
-export interface LoginRequest {
+export interface RequisicaoLogin {
   username: string;
   password: string;
 }
 
-export interface LoginResponse {
+export interface RespostaLogin {
   access_token: string;
   refresh_token: string;
   expires_in: number;
   refresh_expires_in: number;
 }
 
-export interface RefreshTokenResponse {
+export interface RespostaRefreshToken {
   access_token: string;
   refresh_token: string;
   expires_in: number;
@@ -25,7 +25,7 @@ export interface RefreshTokenResponse {
 // INTERFACES DE PETS
 // ============================================
 
-export interface PetImage {
+export interface ImagemPet {
   id: number;
   nome: string;
   contentType: string;
@@ -37,10 +37,10 @@ export interface Pet {
   nome: string;
   raca: string;
   idade: number;
-  foto?: PetImage;
+  foto?: ImagemPet;
 }
 
-export interface PaginatedResponse<T> {
+export interface RespostaPaginada<T> {
   page: number;
   size: number;
   total: number;
@@ -52,7 +52,7 @@ export interface PaginatedResponse<T> {
 // INTERFACES DE ERRO
 // ============================================
 
-export interface ApiErrorResponse {
+export interface RespostaErroApi {
   message?: string;
   error?: string;
   statusCode?: number;

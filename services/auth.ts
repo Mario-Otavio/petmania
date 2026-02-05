@@ -1,20 +1,20 @@
 import { AxiosError } from 'axios';
 import apiClient from './apiClient';
-import type { LoginRequest, LoginResponse, RefreshTokenResponse, ApiErrorResponse } from './types';
+import type { RequisicaoLogin, RespostaLogin, RespostaRefreshToken, RespostaErroApi } from './types';
 import Cookies from 'js-cookie';
 
 /**
  * Realiza o login do usuário
- * @param credentials - Credenciais de login (username e password)
+ * @param credenciais - Credenciais de login (username e password)
  * @returns Promise com os dados de autenticação
  */
-export async function loginApi(credentials: LoginRequest): Promise<LoginResponse> {
+export async function fazerLoginApi(credenciais: RequisicaoLogin): Promise<RespostaLogin> {
   try {
-    const response = await apiClient.post<LoginResponse>('/autenticacao/login', credentials);
+    const response = await apiClient.post<RespostaLogin>('/autenticacao/login', credenciais);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      const errorData = error.response?.data as ApiErrorResponse;
+      const errorData = error.response?.data as RespostaErroApi;
       throw new Error(errorData?.message || 'Falha na autenticação. Verifique suas credenciais.');
     }
     throw new Error('Erro de conexão. Verifique sua rede ou tente novamente mais tarde.');
@@ -26,9 +26,9 @@ export async function loginApi(credentials: LoginRequest): Promise<LoginResponse
  * @param refreshToken - Token de atualização
  * @returns Promise com os novos tokens
  */
-export async function refreshTokenApi(refreshToken: string): Promise<RefreshTokenResponse> {
+export async function atualizarTokenApi(refreshToken: string): Promise<RespostaRefreshToken> {
   try {
-    const response = await apiClient.post<RefreshTokenResponse>(
+    const response = await apiClient.post<RespostaRefreshToken>(
       '/autenticacao/refresh',
       {},
       {
@@ -40,7 +40,7 @@ export async function refreshTokenApi(refreshToken: string): Promise<RefreshToke
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      const errorData = error.response?.data as ApiErrorResponse;
+      const errorData = error.response?.data as RespostaErroApi;
       throw new Error(errorData?.message || 'Falha ao renovar o token. Faça login novamente.');
     }
     throw new Error('Erro de conexão ao renovar token.');
@@ -50,7 +50,7 @@ export async function refreshTokenApi(refreshToken: string): Promise<RefreshToke
 /**
  * Realiza o logout do usuário (limpa tokens locais e cookies)
  */
-export function logoutApi(): void {
+export function fazerLogoutApi(): void {
   if (typeof window !== 'undefined') {
     // Limpar localStorage
     localStorage.removeItem('token');
@@ -66,7 +66,7 @@ export function logoutApi(): void {
  * Verifica se o usuário está autenticado
  * @returns true se houver token válido
  */
-export function isAuthenticated(): boolean {
+export function estaAutenticado(): boolean {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
     return !!token;
@@ -78,7 +78,7 @@ export function isAuthenticated(): boolean {
  * Obtém o token de acesso atual
  * @returns Token de acesso ou null
  */
-export function getAccessToken(): string | null {
+export function obterTokenAcesso(): string | null {
   if (typeof window !== 'undefined') {
     return localStorage.getItem('token');
   }

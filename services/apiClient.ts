@@ -1,10 +1,10 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-export const API_BASE_URL = 'https://pet-manager-api.geia.vip';
+export const URL_BASE_API = 'https://pet-manager-api.geia.vip';
 
 // Criar instância do Axios
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: URL_BASE_API,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -42,7 +42,7 @@ apiClient.interceptors.response.use(
         const refreshToken = localStorage.getItem('refresh_token');
         if (refreshToken) {
           const response = await axios.post(
-            `${API_BASE_URL}/autenticacao/refresh`,
+            `${URL_BASE_API}/autenticacao/refresh`,
             {},
             {
               headers: {

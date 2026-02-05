@@ -27,21 +27,21 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { loginApi } from '@/services/auth';
+import { fazerLoginApi } from '@/services/auth';
 
 // Esquema de validação com Zod
-const formSchema = z.object({
+const esquemaFormulario = z.object({
     username: z.string().min(1, { message: 'Por favor, insira seu usuário.' }),
     password: z.string().min(1, { message: 'Por favor, insira sua senha.' }),
 });
 
 export default function LoginPage() {
-    const [isLoading, setIsLoading] = useState(false);
+    const [estaCarregando, setEstaCarregando] = useState(false);
     const router = useRouter();
 
     // 1. Definição do formulário
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const formulario = useForm<z.infer<typeof esquemaFormulario>>({
+        resolver: zodResolver(esquemaFormulario),
         defaultValues: {
             username: '',
             password: '',
@@ -49,17 +49,17 @@ export default function LoginPage() {
     });
 
     // 2. Manipulador de envio
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        setIsLoading(true);
+    async function aoSubmeter(valores: z.infer<typeof esquemaFormulario>) {
+        setEstaCarregando(true);
         try {
-            const data = await loginApi(values);
+            const dados = await fazerLoginApi(valores);
 
             // Salvar tokens em cookies (seguro para middleware) e localStorage (acesso fácil client-side)
-            Cookies.set('token', data.access_token, { expires: 1 }); // Expira em 1 dia
-            Cookies.set('refresh_token', data.refresh_token, { expires: 7 });
+            Cookies.set('token', dados.access_token, { expires: 1 }); // Expira em 1 dia
+            Cookies.set('refresh_token', dados.refresh_token, { expires: 7 });
 
-            localStorage.setItem('token', data.access_token);
-            localStorage.setItem('refresh_token', data.refresh_token);
+            localStorage.setItem('token', dados.access_token);
+            localStorage.setItem('refresh_token', dados.refresh_token);
 
             toast.success('Login realizado com sucesso!');
             router.push('/dashboard'); // Redirecionar para o dashboard
@@ -67,7 +67,7 @@ export default function LoginPage() {
             toast.error(error instanceof Error ? error.message : 'Ocorreu um erro ao fazer login.');
             console.error(error);
         } finally {
-            setIsLoading(false);
+            setEstaCarregando(false);
         }
     }
 
@@ -114,10 +114,10 @@ export default function LoginPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <Form {...formulario}>
+                            <form onSubmit={formulario.handleSubmit(aoSubmeter)} className="space-y-6">
                                 <FormField
-                                    control={form.control}
+                                    control={formulario.control}
                                     name="username"
                                     render={({ field }) => (
                                         <FormItem>
@@ -139,7 +139,7 @@ export default function LoginPage() {
                                 />
 
                                 <FormField
-                                    control={form.control}
+                                    control={formulario.control}
                                     name="password"
                                     render={({ field }) => (
                                         <FormItem>
@@ -162,8 +162,8 @@ export default function LoginPage() {
                                     )}
                                 />
 
-                                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white" type="submit" disabled={isLoading}>
-                                    {isLoading ? (
+                                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white" type="submit" disabled={estaCarregando}>
+                                    {estaCarregando ? (
                                         <>
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                             Entrando...
