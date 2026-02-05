@@ -63,29 +63,14 @@ const data = {
                 },
             ],
         },
-        {
-            title: "Agendamentos",
-            url: "#",
-            icon: CalendarDays,
-            items: [
-                {
-                    title: "Hoje",
-                    url: "#",
-                },
-                {
-                    title: "Calendário",
-                    url: "#",
-                },
-            ],
-        },
     ],
-    secondary: [
-        {
-            title: "Configurações",
-            url: "#",
-            icon: Settings,
-        },
-    ],
+    // secondary: [
+    //     {
+    //         title: "Configurações",
+    //         url: "#",
+    //         icon: Settings,
+    //     },
+    // ],
 }
 
 export function AppSidebar() {
@@ -145,8 +130,8 @@ export function AppSidebar() {
                     </SidebarMenu>
                 </SidebarGroup>
                 <SidebarGroup className="mt-auto">
-                    <SidebarGroupLabel>Sistema</SidebarGroupLabel>
-                    <SidebarMenu>
+                    <SidebarGroupLabel>Versão 1.0.0</SidebarGroupLabel>
+                    {/* <SidebarMenu>
                         {data.secondary.map((item) => (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild size="sm">
@@ -157,7 +142,7 @@ export function AppSidebar() {
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}
-                    </SidebarMenu>
+                    </SidebarMenu> */}
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>

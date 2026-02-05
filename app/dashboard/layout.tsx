@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AppSidebar } from "@/components/app-sidebar"
 import {
     Breadcrumb,
@@ -13,12 +17,42 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { estaAutenticado } from '@/services/auth';
 
 export default function DashboardLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const router = useRouter();
+    const [verificando, setVerificando] = useState(true);
+
+    useEffect(() => {
+        const checkAuth = () => {
+            if (!estaAutenticado()) {
+                router.push('/login');
+            } else {
+                setVerificando(false);
+            }
+        };
+
+        checkAuth();
+
+        // Escutar mudanças no localStorage (ex: logout em outra aba)
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'token' && !e.newValue) {
+                router.push('/login');
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, [router]);
+
+    if (verificando) {
+        return null; // Ou um loading spinner
+    }
+
     return (
         <SidebarProvider>
             <AppSidebar />

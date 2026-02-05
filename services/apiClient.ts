@@ -37,10 +37,11 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
-        // Tentar renovar o token
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
+      const refreshToken = localStorage.getItem('refresh_token');
+
+      if (refreshToken) {
+        try {
+          // Tentar renovar o token
           const response = await axios.post(
             `${URL_BASE_API}/autenticacao/refresh`,
             {},
@@ -64,15 +65,21 @@ apiClient.interceptors.response.use(
 
           // Retentar a requisição original
           return apiClient(originalRequest);
+        } catch (refreshError) {
+          // Se falhar ao renovar, limpar tokens e redirecionar para login
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '/login';
+          }
+          return Promise.reject(refreshError);
         }
-      } catch (refreshError) {
-        // Se falhar ao renovar, limpar tokens e redirecionar para login
+      } else {
+        // Se não houver refresh token e deu 401, redireciona direto
         if (typeof window !== 'undefined') {
           localStorage.removeItem('token');
-          localStorage.removeItem('refresh_token');
           window.location.href = '/login';
         }
-        return Promise.reject(refreshError);
       }
     }
 

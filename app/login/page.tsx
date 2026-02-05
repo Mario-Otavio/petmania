@@ -8,7 +8,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, User, Lock, PawPrint } from 'lucide-react';
 import { toast } from 'sonner';
-import Cookies from 'js-cookie';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,7 +26,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { fazerLoginApi } from '@/services/auth';
+import { fazerLoginApi, estaAutenticado } from '@/services/auth';
 
 // Esquema de validação com Zod
 const esquemaFormulario = z.object({
@@ -38,6 +37,13 @@ const esquemaFormulario = z.object({
 export default function LoginPage() {
     const [estaCarregando, setEstaCarregando] = useState(false);
     const router = useRouter();
+
+    // Redireciona se já estiver logado
+    React.useEffect(() => {
+        if (estaAutenticado()) {
+            router.push('/dashboard');
+        }
+    }, [router]);
 
     // 1. Definição do formulário
     const formulario = useForm<z.infer<typeof esquemaFormulario>>({
@@ -53,10 +59,6 @@ export default function LoginPage() {
         setEstaCarregando(true);
         try {
             const dados = await fazerLoginApi(valores);
-
-            // Salvar tokens em cookies (seguro para middleware) e localStorage (acesso fácil client-side)
-            Cookies.set('token', dados.access_token, { expires: 1 }); // Expira em 1 dia
-            Cookies.set('refresh_token', dados.refresh_token, { expires: 7 });
 
             localStorage.setItem('token', dados.access_token);
             localStorage.setItem('refresh_token', dados.refresh_token);

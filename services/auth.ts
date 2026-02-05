@@ -1,7 +1,6 @@
 import { AxiosError } from 'axios';
 import apiClient from './apiClient';
 import type { RequisicaoLogin, RespostaLogin, RespostaRefreshToken, RespostaErroApi } from './types';
-import Cookies from 'js-cookie';
 
 /**
  * Realiza o login do usuário
@@ -55,10 +54,6 @@ export function fazerLogoutApi(): void {
     // Limpar localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
-    
-    // Limpar Cookies
-    Cookies.remove('token');
-    Cookies.remove('refresh_token');
   }
 }
 
